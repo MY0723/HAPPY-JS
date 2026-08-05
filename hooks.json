@@ -1,0 +1,154 @@
+[
+  {
+    "id": "bypass_debugger",
+    "name": "Bypass Debugger",
+    "description": "绕过无限 Debugger。通过 Hook eval/Function/Function.prototype.constructor 移除 debugger 语句，覆盖绝大多数场景。绕不过或报错时建议切换火狐浏览器忽略断点。",
+    "category": "antidebug"
+  },
+  {
+    "id": "hook_console",
+    "name": "Hook Console",
+    "description": "防止 JS 重写 console.log/info/warn/error 等方法，避免控制台无法打印；同时禁止 console.clear 清空控制台。",
+    "category": "antidebug"
+  },
+  {
+    "id": "hook_close",
+    "name": "Hook Close",
+    "description": "重写 window.close，避免网站反调试时关闭当前页面。",
+    "category": "antidebug"
+  },
+  {
+    "id": "hook_history",
+    "name": "Hook History",
+    "description": "拦截 history.go / history.back，避免网站反调试返回上一页或跳转特定页面。",
+    "category": "antidebug"
+  },
+  {
+    "id": "fixed_window",
+    "name": "Fixed Window Size",
+    "description": "固定 innerHeight/innerWidth/outerHeight/outerWidth，绕过前端检测用户是否打开控制台。",
+    "category": "antidebug",
+    "fixed_variate": 1,
+    "value": "1366x660"
+  },
+  {
+    "id": "hook_crypto",
+    "name": "Hook CryptoJS",
+    "description": "Hook CryptoJS 中的对称/哈希/HMAC 算法(AES/DES/Rabbit/MD5/SHA/HMAC 等)，在控制台打印算法名、密钥、明文、密文。若未打印请确认站点是否清除了 console.log。",
+    "category": "antidebug",
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_random",
+    "name": "Math.random",
+    "description": "固定 Math.random 返回值，便于调试含随机数的逻辑。",
+    "category": "antidebug",
+    "fixed_variate": 1,
+    "value": "0",
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_date",
+    "name": "Date.now",
+    "description": "固定 Date.now 返回值，便于调试时间相关逻辑。",
+    "category": "antidebug",
+    "fixed_variate": 1,
+    "value": "0",
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_performance",
+    "name": "performance.now",
+    "description": "固定 performance.now 返回值，绕过基于时间差的反调试检测。",
+    "category": "antidebug",
+    "fixed_variate": 1,
+    "value": "0",
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_cookie",
+    "name": "document.cookie",
+    "description": "捕获 document.cookie 的写入，打印设置的 cookie；可设置关键字仅捕获特定 cookie 名。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_fetch",
+    "name": "fetch",
+    "description": "捕获 fetch 请求，打印传入参数；可触发 debugger / 打印调用栈。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 0,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_xhr_open",
+    "name": "XMLHttpRequest.open",
+    "description": "捕获 XHR 初始化配置(url, method)；可设置关键字仅捕获特定 URL。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_xhr_header",
+    "name": "XMLHttpRequest.setRequestHeader",
+    "description": "捕获 XHR 设置的请求头；可设置关键字仅捕获特定请求头名。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_storage_set",
+    "name": "Storage.setItem",
+    "description": "捕获 localStorage / sessionStorage 的 setItem，打印键值；可设置关键字仅捕获特定键名。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_storage_get",
+    "name": "Storage.getItem",
+    "description": "捕获 localStorage / sessionStorage 的 getItem，打印读取的键名；可设置关键字仅捕获特定键名。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "hook_json",
+    "name": "JSON.stringify/parse",
+    "description": "捕获 JSON.stringify 与 JSON.parse 的输入输出；可设置关键字仅捕获特定 JSON 字符串。",
+    "category": "hook",
+    "fixed_variate": 0,
+    "has_Param": 1,
+    "debugger": 1,
+    "stack": 1
+  },
+  {
+    "id": "canvas_inject",
+    "name": "Canvas 指纹干扰",
+    "description": "Hook Canvas toBlob/toDataURL/getImageData，向像素数据注入随机扰动，使 Canvas 指纹每次不同，防止网站通过 Canvas 指纹追踪用户（整合自 Heimdallr）。",
+    "category": "hook"
+  },
+  {
+    "id": "hook_response_body",
+    "name": "响应体捕获",
+    "description": "Hook fetch/XMLHttpRequest 捕获 AJAX 响应体，发送给 background 用 Heimdallr position5 规则匹配（指纹/敏感信息/蜜罐特征）。配合防护页使用，无需 debugger 权限。",
+    "category": "hook"
+  }
+]

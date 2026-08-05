@@ -1,0 +1,54 @@
+/* 潜影 LatentEye — hook_storage_get (主世界)
+ * 捕获 localStorage / sessionStorage.getItem。flag=1 按 param 关键字过滤键名。
+ * 注意：配置在 initHook 时一次性读取（闭包持有），避免在 hook 内调用
+ *       localStorage.getItem 造成自身递归栈溢出。 */
+(function () {
+    'use strict';
+    const SCRIPT_ID = 'hook_storage_get';
+    function clearCfg(id) { ['value', 'flag', 'param', 'debugger', 'stack'].forEach(k => localStorage.removeItem('LatentEye_' + id + '_' + k)); }
+
+    function hookStorage(storage, label, cfg) {
+        const _get = storage.getItem;
+        storage.getItem = function (key) {
+            const k = String(key || '');
+            const hit = cfg.flag === '1' && cfg.param.length
+                ? cfg.param.some(p => k.toLowerCase().includes(String(p).toLowerCase()))
+                : true;
+            if (hit) {
+                console.log(`%c[LatentEye] ${label}.getItem`, 'color:#14b8a6;font-weight:bold', '\nkey:', k);
+                if (cfg.isDbg) debugger;
+                if (cfg.isStack) console.log(new Error().stack);
+            }
+            return _get.apply(this, arguments);
+        };
+    }
+
+    function readCfg() {
+        // 使用原生 getItem 读取，避免触发自身 hook
+        const proto = Storage.prototype;
+        const get = proto.getItem;
+        const flag = get.call(localStorage, 'LatentEye_' + SCRIPT_ID + '_flag');
+        let param = []; try { param = JSON.parse(get.call(localStorage, 'LatentEye_' + SCRIPT_ID + '_param')) || []; } catch {}
+        const isDbg = get.call(localStorage, 'LatentEye_' + SCRIPT_ID + '_debugger') === '1';
+        const isStack = get.call(localStorage, 'LatentEye_' + SCRIPT_ID + '_stack') === '1';
+        return { flag, param, isDbg, isStack };
+    }
+
+    function initHook() {
+        try {
+            const cfg = readCfg();
+            hookStorage(localStorage, 'localStorage', cfg);
+            hookStorage(sessionStorage, 'sessionStorage', cfg);
+            clearCfg(SCRIPT_ID);
+        } catch (e) { console.error('[LatentEye] hook_storage_get:', e); }
+    }
+    function setup() {
+        window.addEventListener('message', (e) => {
+            if (e.source !== window) return;
+            const d = e.data;
+            if (!d || d.source !== 'latenteye-extension' || d.type !== 'HOOK_CONFIG_READY') return;
+            if ((d.scriptIds || []).includes(SCRIPT_ID)) initHook();
+        });
+    }
+    setup();
+})();

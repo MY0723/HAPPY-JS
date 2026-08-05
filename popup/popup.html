@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPPY JS</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="app">
+        <!-- 顶部 -->
+        <header class="topbar">
+            <div class="brand">
+                <img src="../icons/icon32.png" alt="logo" class="logo">
+                <div class="brand-text">
+                    <span class="brand-name">HAPPY JS</span>
+                    <span class="brand-sub">敏感信息扫描 · 逆向Hook</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <span class="mode-badge" id="mode-badge">标准模式</span>
+                <span class="progress-badge" id="progress-badge" title="扫描进度">--</span>
+                <button class="theme-btn" id="theme-btn" title="切换浅色/深色模式">
+                    <svg id="theme-icon" viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- 导航 -->
+        <nav class="nav">
+            <button class="nav-btn active" data-page="scanner">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.5 6.5 0 1 0-.7.7l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
+                扫描
+            </button>
+            <button class="nav-btn" data-page="finger">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/><path fill="currentColor" d="M12 6a6 6 0 1 0 6 6 6 6 0 0 0-6-6zm0 10a4 4 0 1 1 4-4 4 4 0 0 1-4 4z"/></svg>
+                指纹
+            </button>
+            <button class="nav-btn" data-page="hooks">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M22 7l-1.41-1.41-3.54 3.54-1.42-1.42 3.54-3.54L17.76 2H22v5zm-5.83 2.17l-7 7a2 2 0 0 0 0 2.83l1.41 1.41a2 2 0 0 0 2.83 0l7-7-3.24-3.24z"/></svg>
+                Hook
+            </button>
+            <button class="nav-btn" data-page="routes">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M3 10h11v2H3zm0-4h11v2H3zm0 8h7v2H3zm13 0v6l5-3z"/></svg>
+                路由
+            </button>
+            <button class="nav-btn" data-page="settings">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M19.14 12.94a7.49 7.49 0 0 0 0-1.88l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.42 7.42 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54a7.42 7.42 0 0 0-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.7 8.84a.5.5 0 0 0 .12.64l2.03 1.58a7.49 7.49 0 0 0 0 1.88l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32a.5.5 0 0 0 .61.22l2.39-.96a7.42 7.42 0 0 0 1.62.94l.36 2.54a.5.5 0 0 0 .5.42h3.84a.5.5 0 0 0 .5-.42l.36-2.54a7.42 7.42 0 0 0 1.62-.94l2.39.96a.5.5 0 0 0 .61-.22l1.92-3.32a.5.5 0 0 0-.12-.64zM12 15.5A3.5 3.5 0 1 1 15.5 12 3.5 3.5 0 0 1 12 15.5z"/></svg>
+                设置
+            </button>
+            <button class="nav-btn" data-page="guard">
+                <svg viewBox="0 0 24 24" width="16" height="16"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+                防护
+            </button>
+        </nav>
+
+        <!-- 页面容器 -->
+        <main class="pages">
+            <!-- 扫描结果 -->
+            <section class="page scanner-page active" data-page="scanner">
+                <div class="page-toolbar">
+                    <input type="text" id="scanner-search" class="search-input" placeholder="过滤结果...">
+                    <button class="ghost-btn" id="export-btn" title="导出JSON">
+                        <svg viewBox="0 0 24 24" width="15" height="15"><path fill="currentColor" d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+                        导出
+                    </button>
+                </div>
+                <div class="frame-nav" id="frame-nav" style="display:none;"></div>
+                <div class="scanner-summary" id="scanner-summary"></div>
+                <div class="sections" id="scanner-sections"></div>
+            </section>
+
+            <!-- 指纹 -->
+            <section class="page finger-page" data-page="finger">
+                <div class="finger-section" id="finger-list">
+                    <div class="loading">点击页面后刷新以采集指纹</div>
+                </div>
+            </section>
+
+            <!-- Hook 工具 -->
+            <section class="page hooks-page" data-page="hooks">
+                <div class="hooks-subtabs">
+                    <button class="subtab active" data-sub="antidebug">反调试</button>
+                    <button class="subtab" data-sub="hook">API Hook</button>
+                </div>
+                <div class="hooks-search">
+                    <input type="text" id="hooks-search" placeholder="搜索 Hook 脚本...">
+                </div>
+                <div class="hooks-list" id="hooks-list"></div>
+            </section>
+
+            <!-- 路由 -->
+            <section class="page routes-page" data-page="routes">
+                <div class="routes-subtabs">
+                    <button class="subtab active" data-route-sub="vue">Vue</button>
+                    <button class="subtab" data-route-sub="react">React</button>
+                </div>
+                <div class="routes-info" id="routes-info">等待检测路由（请在 Hook 页开启相应脚本并刷新页面）</div>
+                <div class="routes-list" id="routes-list"></div>
+                <div class="routes-actions" id="routes-actions" style="display:none;">
+                    <button class="ghost-btn" id="copy-all-paths">复制所有路径</button>
+                    <button class="ghost-btn" id="copy-all-urls">复制所有URL</button>
+                </div>
+            </section>
+
+            <!-- 设置 -->
+            <section class="page settings-page" data-page="settings">
+                <div class="setting-group">
+                    <h3>扫描选项</h3>
+                    <label class="switch-row">
+                        <span><b>动态扫描</b><small>实时捕获动态渲染内容（MutationObserver）</small></span>
+                        <label class="toggle"><input type="checkbox" id="dynamic-scan"><span class="slider"></span></label>
+                    </label>
+                    <label class="switch-row">
+                        <span><b>深度扫描</b><small>递归抓取 chunk 字符串与 webpack runtime，发现深层 API</small></span>
+                        <label class="toggle"><input type="checkbox" id="deep-scan"><span class="slider"></span></label>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <h3>Hook 模式</h3>
+                    <label class="switch-row">
+                        <span><b>全局模式</b><small>开启后 Hook 脚本注入所有网站；关闭为标准模式(按域名)</small></span>
+                        <label class="toggle"><input type="checkbox" id="global-mode"><span class="slider"></span></label>
+                    </label>
+                </div>
+                <div class="setting-group">
+                    <h3>白名单（每行一个域名，跳过扫描）</h3>
+                    <textarea id="whitelist-input" rows="5" placeholder="example.com&#10;.example.com"></textarea>
+                    <button class="primary-btn" id="save-whitelist">保存白名单</button>
+                </div>
+                <div class="setting-group about">
+                    <h3>关于</h3>
+                    <p><b>HAPPY JS v1.0.0</b></p>
+                    <p>跨浏览器敏感信息与指纹扫描 · 动态/深度扫描 · JS逆向Hook辅助</p>
+                    <p class="hint">提示：开启/关闭 Hook 后需刷新页面生效。Chrome 与 Firefox 128+ 支持主世界 Hook 注入。</p>
+                </div>
+            </section>
+
+            <!-- 防护（整合自 Heimdallr） -->
+            <section class="page guard-page" data-page="guard">
+                <!-- 子标题 1：反蜜罐检测 -->
+                <div class="guard-subtitle">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 2L1 7v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V7l-11-5z"/></svg>
+                    <span>反蜜罐检测</span>
+                </div>
+                <div class="setting-group">
+                    <label class="switch-row">
+                        <span><b>蜜罐域名拦截</b><small>通过 declarativeNetRequest 拦截已知蜜罐 JSONP 域名</small></span>
+                        <label class="toggle"><input type="checkbox" id="hd-block-honeypot"><span class="slider"></span></label>
+                    </label>
+                    <label class="switch-row">
+                        <span><b>JSONP 告警通知</b><small>单页 JSONP 命中超过 10 个时弹出系统通知</small></span>
+                        <label class="toggle"><input type="checkbox" id="hd-jsonp-alert"><span class="slider"></span></label>
+                    </label>
+                    <div class="guard-stats" id="hd-honeypot-stats"></div>
+                    <div class="guard-results" id="hd-honeypot-results">
+                        <div class="empty-state">暂无蜜罐命中</div>
+                    </div>
+                </div>
+
+                <!-- 子标题 2：特征对抗 -->
+                <div class="guard-subtitle">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+                    <span>特征对抗</span>
+                </div>
+                <div class="setting-group">
+                    <label class="switch-row">
+                        <span><b>禁用页面缓存</b><small>每次页面加载时清除浏览器缓存，避免缓存影响检测</small></span>
+                        <label class="toggle"><input type="checkbox" id="hd-no-page-cache"><span class="slider"></span></label>
+                    </label>
+                    <p class="hint guard-note">Canvas 指纹干扰、响应体捕获请到 Hook 页 → API Hook 开启（响应体捕获用于 position5 规则匹配，无需 debugger 权限）</p>
+                </div>
+
+                <!-- 子标题 3：指纹规则识别 -->
+                <div class="guard-subtitle">
+                    <svg viewBox="0 0 24 24" width="14" height="14"><path fill="currentColor" d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2zm0 16H5V9h14v11z"/></svg>
+                    <span>指纹规则识别</span>
+                </div>
+                <div class="setting-group">
+                    <div class="guard-stats" id="hd-fingerprint-stats"></div>
+                    <div class="guard-results" id="hd-fingerprint-results">
+                        <div class="empty-state">暂无指纹命中</div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Toast -->
+        <div class="toast" id="toast"></div>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
