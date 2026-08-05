@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "HAPPY JS",
-  "version": "1.0.0",
+  "version": "1.0.9",
   "description": "跨浏览器敏感信息与指纹扫描 · 动态/深度扫描 · JS逆向Hook辅助 · 反蜜罐与特征对抗",
   "author": "HappyJS",
 
