@@ -25,6 +25,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 **云密钥识别覆盖**：微信开放平台/小程序、企业微信、AWS（全前缀）、阿里云、腾讯云、京东云、Google API、GitHub/GitLab Token、支付宝、Apple、Slack、Stripe、Twilio、钉钉、飞书等近 20 种。
 
 **扫描增强**：直接抓取 DOM `<script src>` 与 `<link rel="modulepreload">`（比纯正则更可靠，覆盖动态注入）；扩充噪声过滤词减少误报。点击扫描项右侧的 JS 源路径可直接在新标签打开该 JS 文件。
+<img width="809" height="1056" alt="aa0a2a68098c3d62ef21dce4ecb143df" src="https://github.com/user-attachments/assets/f3843d6f-3d8f-4945-b462-1a271ab7c131" />
 
 ### 2. 指纹识别（指纹页）
 - **HTTP 响应头指纹**：Server / X-Powered-By / Via / Set-Cookie 等
@@ -32,6 +33,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - **流量统计指纹**：基于同源 JS 资源特征识别
 - **页面内嵌指纹**：Webpack / Vite / Vue / React / Angular / jQuery / Element UI / ThinkPHP / Django 等
 - **CDN 识别**：Cloudflare / jsDelivr / unpkg
+<img width="809" height="1056" alt="8dc90804a6c4a452a6346d3ea1a73a5c" src="https://github.com/user-attachments/assets/aad878c1-c6f6-41d9-b1c1-b8e5d99c423f" />
 
 ### 3. 动态扫描（MutationObserver）
 开启后通过 `MutationObserver` 实时监听 DOM 变化，对动态渲染（SPA、AJAX 注入、懒加载）产生的新内容即时扫描，无需手动刷新。
@@ -63,6 +65,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 | JSON.stringify/parse | 捕获 JSON 序列化/反序列化 |
 
 所有 Hook 脚本支持 **debugger 断点** 与 **调用栈打印** 开关，支持 **固定变量值** 与 **关键字检索** 配置。
+<img width="809" height="1056" alt="2fcb3c7e2571784883f3134098ebb8c8" src="https://github.com/user-attachments/assets/4941152b-a2c3-4c92-bf76-904579717930" />
 
 ### 6. 路由提取（路由页）
 通过主世界注入脚本（`inject/vue_router.js`）提取 **Vue2/Vue3 Router** 与 **React Router** 的完整路由表：
@@ -73,6 +76,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - hash/history 模式自动识别 + base 路径
 - 多档延时重试（300/800/1500/3000/6000ms）覆盖 SPA 异步挂载
 - 支持路径/URL 批量复制、当前标签页直接打开路由
+<img width="809" height="1056" alt="78017bc9b84e091c16bf83fef8a3422b" src="https://github.com/user-attachments/assets/4861473c-af4a-4f9d-b0a0-e71b4158c84a" />
 
 ### 7. 防护模块（防护页 · 整合自 Heimdallr）
 融合 Heimdallr 的反蜜罐、特征对抗、指纹规则识别三大能力，按子标题分三个区块：
@@ -97,6 +101,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 
 > 规则库定义在 [data/heimdallr_rules.js](data/heimdallr_rules.js)，完整保留 Heimdallr 原始规则结构与 `initPrinter()` 索引逻辑，可自行扩展。
 
+
 ### 8. 多 Frame 支持
 自动识别主页面与 iframe，按 Frame 分组展示扫描结果，可切换查看不同 Frame 的扫描数据。
 
@@ -108,6 +113,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 ### 10. 浅色/深色双主题
 - 顶部右上角主题切换按钮，一键在浅色（简约中性灰 + 靛蓝）与深色（深石板）间切换
 - 主题偏好持久化存储，下次打开自动恢复
+<img width="809" height="1056" alt="0d188b3ea087d9effed202aa0a412d41" src="https://github.com/user-attachments/assets/906eeec0-8f1a-4abe-95d4-95ade57eea51" />
 
 ---
 
