@@ -27,6 +27,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 **云密钥识别覆盖**：微信开放平台/小程序、企业微信、AWS（全前缀）、阿里云、腾讯云、京东云、Google API、GitHub/GitLab Token、支付宝、Apple、Slack、Stripe、Twilio、钉钉、飞书等近 20 种。
 
 **扫描增强**：直接抓取 DOM `<script src>` 与 `<link rel="modulepreload">`（比纯正则更可靠，覆盖动态注入）；扩充噪声过滤词减少误报。点击扫描项右侧的 JS 源路径可直接在新标签打开该 JS 文件。
+
 <img width="400" height="500" alt="aa0a2a68098c3d62ef21dce4ecb143df" src="https://github.com/user-attachments/assets/fb9ac5f6-a78a-4df8-9628-badc934c5d9d" />
 
 ### 2. 指纹识别（指纹页）
@@ -35,6 +36,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - **流量统计指纹**：基于同源 JS 资源特征识别
 - **页面内嵌指纹**：Webpack / Vite / Vue / React / Angular / jQuery / Element UI / ThinkPHP / Django 等
 - **CDN 识别**：Cloudflare / jsDelivr / unpkg
+
 <img width="400" height="500" alt="8dc90804a6c4a452a6346d3ea1a73a5c" src="https://github.com/user-attachments/assets/99ee050d-daf4-4571-9710-9a7c1af74788" />
 
 ### 3. 动态扫描（MutationObserver）
@@ -56,7 +58,9 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 | Fixed Window Size | 固定窗口尺寸绕过控制台检测 |
 | Hook CryptoJS | 打印 AES/DES/Rabbit/MD5/SHA/HMAC 算法的密钥与明文密文 |
 | Math.random / Date.now / performance.now | 固定返回值便于调试 |
+
 <img width="400" height="500" alt="2fcb3c7e2571784883f3134098ebb8c8" src="https://github.com/user-attachments/assets/fcfef4f4-b1e1-4edc-b603-33d3a417912c" />
+
 #### API Hook 脚本（7 个）
 | 脚本 | 作用 |
 | --- | --- |
@@ -78,10 +82,12 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - hash/history 模式自动识别 + base 路径
 - 多档延时重试（300/800/1500/3000/6000ms）覆盖 SPA 异步挂载
 - 支持路径/URL 批量复制、当前标签页直接打开路由
+
 <img width="400" height="500" alt="78017bc9b84e091c16bf83fef8a3422b" src="https://github.com/user-attachments/assets/448abd9c-0e5c-4ddd-a976-995e383221db" />
 
 ### 7. 防护模块（防护页 · 整合自 Heimdallr）
 融合 Heimdallr 的反蜜罐、特征对抗、指纹规则识别三大能力，按子标题分三个区块：
+
 <img width="400" height="500" alt="aa836aab310af30438452371bb5381c2" src="https://github.com/user-attachments/assets/0bfa0406-225c-4342-ae85-03a0e91e86f3" />
 
 #### 反蜜罐检测
@@ -115,6 +121,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 ### 10. 浅色/深色双主题
 - 顶部右上角主题切换按钮，一键在浅色（简约中性灰 + 靛蓝）与深色（深石板）间切换
 - 主题偏好持久化存储，下次打开自动恢复
+
 <img width="400" height="500" alt="0d188b3ea087d9effed202aa0a412d41" src="https://github.com/user-attachments/assets/7275117c-31d6-4534-9476-e8fe43a04df3" />
 
 ### 11. MCP 服务（AI 工具桥接）
@@ -123,6 +130,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - **架构**：AI 工具以 stdio 拉起本地桥接进程 `mcp/server.js`（纯 Node.js 零依赖），扩展后台作为 WebSocket 客户端主动连入 `ws://127.0.0.1:<端口>`（默认 10086），令牌双向鉴权
 - **多客户端并存**：多个 AI 工具同时配置时，首个进程成为桥接，后续进程自动降级为中继转发
 - **保活与自愈**：桥端 20s 心跳保活 Service Worker，断线指数退避重连 + alarms 兜底
+
 <img width="400" height="500" alt="44ce2cf76c1614baa7a55e50c0832213" src="https://github.com/user-attachments/assets/7d467a86-d666-40bf-80d2-905f856e3a3b" />
 
 **13 个 MCP 工具**：
