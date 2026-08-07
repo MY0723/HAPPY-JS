@@ -4,6 +4,8 @@
 
 HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览器扩展，融合了 **FindSomething（敏感信息扫描）**、**SnowEyes（指纹/资源发现）**、**AntiDebug_Breaker（反调试与 API Hook）** 三类项目的核心能力，并重新设计了插件 UI 与扫描引擎。采用 Manifest V3，同时适配 Chrome / Edge / Brave（Chromium 内核）与 Firefox 128+。
 
+**v1.1.0 起内置 MCP（Model Context Protocol）服务**：开启后可在 Codex / Claude / Trae / Cursor 等 AI 工具中通过 MCP 协议直连本插件，调用扫描结果、指纹、路由、抓包、JS Hook 注入、页面跳转等 13 个能力，让 AI 边看边调代码、边取证。具体见下方 [### 11. MCP 服务](#11-mcp-服务ai-工具桥接)。
+
 ---
 
 ## ✨ 功能特性
@@ -100,7 +102,7 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 ### 8. 多 Frame 支持
 自动识别主页面与 iframe，按 Frame 分组展示扫描结果，可切换查看不同 Frame 的扫描数据。
 
-### 8. 模式与白名单
+### 9. 模式与白名单
 - **标准模式**：Hook 脚本按域名独立配置
 - **全局模式**：Hook 脚本注入所有网站
 - **白名单**：按域名跳过扫描
@@ -109,6 +111,33 @@ HAPPY JS 是一款面向 Web 安全测试与 JS 逆向工程的综合型浏览�
 - 顶部右上角主题切换按钮，一键在浅色（简约中性灰 + 靛蓝）与深色（深石板）间切换
 - 主题偏好持久化存储，下次打开自动恢复
 
+### 11. MCP 服务（AI 工具桥接）
+在 **设置页 → MCP 服务** 开启后，Codex / Claude / Trae / Cursor 等 AI 工具可通过 **MCP 协议**连接本插件，直接调用插件能力完成 **信息搜集** 与 **JS 调试**：
+
+- **架构**：AI 工具以 stdio 拉起本地桥接进程 `mcp/server.js`（纯 Node.js 零依赖），扩展后台作为 WebSocket 客户端主动连入 `ws://127.0.0.1:<端口>`（默认 10086），令牌双向鉴权
+- **多客户端并存**：多个 AI 工具同时配置时，首个进程成为桥接，后续进程自动降级为中继转发
+- **保活与自愈**：桥端 20s 心跳保活 Service Worker，断线指数退避重连 + alarms 兜底
+<img width="400" height="500" alt="44ce2cf76c1614baa7a55e50c0832213" src="https://github.com/user-attachments/assets/7d467a86-d666-40bf-80d2-905f856e3a3b" />
+
+**13 个 MCP 工具**：
+
+| 类别 | 工具 | 说明 |
+| --- | --- | --- |
+| 信息搜集 | `get_scan_results` | 获取敏感信息扫描结果（29 类，支持全 frame） |
+| 信息搜集 | `get_fingerprints` | HTTP 头/Cookie/页面指纹 + Heimdallr 规则命中 |
+| 信息搜集 | `get_routes` | Vue/React 完整路由表 |
+| 信息搜集 | `fetch_js` | 抓取任意 JS 文件源码 |
+| 信息搜集 | `get_page_html` / `get_cookies` | 页面 HTML / 站点 Cookie |
+| 信息搜集 | `list_tabs` | 列出浏览器标签页 |
+| JS 调试 | `execute_js` | 在页面主世界执行任意 JS 并返回结果（可访问页面变量/函数） |
+| JS 调试 | `list_hooks` / `enable_hook` / `disable_hook` | Hook 脚本查询与启停（可自动刷新生效） |
+| 联动控制 | `navigate_tab` / `reload_tab` | 标签页导航 / 刷新 |
+
+**接入步骤**：
+1. 本机安装 Node.js（≥ 14，推荐 18+）
+2. 扩展 **设置页 → MCP 服务** → 开启开关，复制生成的配置片段（JSON 适用于 Claude/Trae/Cursor，TOML 适用于 Codex）
+3. 将片段中 `<扩展目录>` 替换为本扩展 `manifest.json` 所在目录，写入 AI 工具的 MCP 配置文件（如 `claude_desktop_config.json`、`~/.codex/config.toml`、Trae MCP 设置）。注意：Windows 路径请统一用正斜杠 `/`（如 `C:/Users/xxx/HAPPY JS/mcp/server.js`），反斜杠 `\` 在 JSON 字符串中必须写成 `\\`，容易出错
+4. 启动 AI 会话，状态变为「已连接桥接进程」即可使用
 ---
 
 ## 📁 目录结构
